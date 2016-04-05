@@ -1,5 +1,6 @@
 package Phonebook;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import Phonebook.AddressBook;
@@ -45,15 +46,33 @@ public class MainMenu
 				break;
 			case 2:
 				String tempLine;
-				System.out.print("전화번호나 이름을 입력하세요: ");
-				tempLine = sc.nextLine();
-				DeleteAddress(tempLine);
+				System.out.print("전화번호로 지우려면 1번, 이름으로 지우려면 2번을 입력하세요: ");
+				int menu = sc.nextInt();
+				sc.nextLine();
+				while (menu != 1 && menu != 2)
+				{
+					System.out.println("잘못 입력하셨습니다.");
+					System.out.print("전화번호로 지우려면 1번, 이름으로 지우려면 2번을 입력하세요: ");
+					menu = sc.nextInt();
+					sc.nextLine();
+				}
+				if (menu == 1)
+				{
+					System.out.print("전화번호를 입력하세요: ");
+					tempLine = sc.nextLine();
+					DeleteAddressByNum(tempLine);
+				}
+				if (menu == 2)
+				{
+					System.out.print("이름을 입력하세요: ");
+					tempLine = sc.nextLine();
+					DeleteAddressByName(tempLine);
+				}
+				break;
 			case 3:
 				ShowAddressList();
 				break;
 			case 4:
-				FindAddressByNameRenderer();
-				break;
 			case 5:
 				FindAddressByNameRenderer();
 				break;
@@ -80,11 +99,21 @@ public class MainMenu
 		}
 	}
 	
-	private static void DeleteAddress(String text)
+	private static void DeleteAddressByNum(String text)
 	{
 		for (int i = 0; i < AddressBook.data.size(); ++i)
 		{
-			if (AddressBook.Get(i).name.equals(text) || AddressBook.Get(i).numbers.contains(text))
+			if (AddressBook.Get(i).numbers.contains(text))
+				AddressBook.data.remove(i);
+		}
+		
+	}
+	
+	private static void DeleteAddressByName(String text)
+	{
+		for (int i = 0; i < AddressBook.data.size(); ++i)
+		{
+			if (AddressBook.Get(i).name.equals(text))
 				AddressBook.data.remove(i);
 		}
 		
@@ -104,7 +133,6 @@ public class MainMenu
 	
 	private static void FindAddressByNameRenderer()
 	{
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -128,7 +156,7 @@ public class MainMenu
 		Person temp = new Person();
 		temp.name = strName;
 		String num;
-		if (AddressBook.contains(strName)!=-1)
+		if (AddressBook.contains(strName) != -1)
 		{
 			System.out.println("이미 존재하는 이름입니다 처음부터 다시 시작하세요");
 			return;
@@ -139,9 +167,23 @@ public class MainMenu
 			System.out.print("전화번호를 입력하세요 : ");
 			num = sc.nextLine();
 			temp.numbers.add(num);
-			System.out.println("계속할까요? (t/f)");
-			yOrN = sc.nextBoolean();
-			sc.nextLine();
+			boolean a = false;
+			while (!a)
+			{
+				System.out.println("계속할까요? (true/false)");
+				try
+				{
+					yOrN = sc.nextBoolean();
+					sc.nextLine();
+				}
+				catch (InputMismatchException e)
+				{
+					System.out.println("잘못입력하셨습니다");
+					sc.nextLine();
+					continue;
+				}
+				a = true;
+			}
 			
 		}
 		AddressBook.Add(temp);

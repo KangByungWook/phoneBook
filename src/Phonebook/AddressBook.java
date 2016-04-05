@@ -15,11 +15,11 @@ public class AddressBook implements Iterable<Person> // 항목 13에서 설명
 	// {
 	// data = new ArrayList<Person>();
 	// }
-	public static int contains(String name)
+	public static int contains(String Dname)
 	{
 		for (int i = 0; i < data.size(); ++i)
 		{
-			if (data.get(i).name.equals(name)||data.get(i).numbers.contains(name))
+			if (data.get(i).name.equals(Dname))
 			{
 				return i;
 			}
